@@ -1,0 +1,95 @@
+ /* CLASSES RESPONSÁVEIS PELO BOTÃO QUE TROCA OS TEMAS E BOTÃO WHATSAPP --- INÍCIO */
+
+ .bi {
+   vertical-align: -.125em;
+   fill: currentColor;
+ }
+
+ .btn-bd-primary {
+   --bd-violet-bg: #114C8D;
+   --bd-violet-rgb: 17.333333, 76.470588, 141.176471;
+   --bs-btn-font-weight: 600;
+   --bs-btn-color: var(--bs-white);
+   --bs-btn-bg: var(--bd-violet-bg);
+   --bs-btn-border-color: var(--bd-violet-bg);
+   --bs-btn-hover-color: var(--bs-white);
+   --bs-btn-hover-bg: #0d407a;
+   --bs-btn-hover-border-color: #0d407a;
+   --bs-btn-focus-shadow-rgb: var(--bd-violet-rgb);
+   --bs-btn-active-color: var(--bs-btn-hover-color);
+   --bs-btn-active-bg: #0a3769;
+   --bs-btn-active-border-color: #0a3769;
+ }
+
+ .bd-mode-toggle {
+   z-index: 1500;
+   margin-bottom: 7em;
+ }
+
+ .bd-mode-toggle .dropdown-menu .active .bi {
+   display: block !important;
+ }
+
+ .whatsapp-link {
+   z-index: 1500;
+   margin-bottom: 4em;
+
+ }
+
+ /* CLASSES RESPONSÁVEIS PELO BOTÃO QUE TROCA OS TEMAS E BOTÃO WHATSAPP --- FIM */
+
+ /*CAROUSEL CLASSES INÍCIO*/
+
+ .c-item {
+   height: 480px;
+ }
+
+ .c-img {
+   height: 100%;
+   object-fit: cover;
+   filter: brightness(0.5);
+ }
+
+ .text-shadow-main {
+   text-shadow: 4px 4px 8px rgba(255, 0, 0, 0.3);
+
+ }
+
+ /*CAROUSEL CLASSES FIM*/
+
+ /* CLASSES RESPONSÁVEIS PELOS CARDS DO PRODUTO --- INÍCIO */
+ .card {
+   transition: box-shadow 0.5s ease, opacity 0.5s ease;
+ }
+
+ .card:hover {
+   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+   opacity: 1;
+ }
+
+ .card:hover .position-absolute {
+   visibility: visible;
+   opacity: 1;
+   transition: opacity 0.5s ease;
+ }
+
+ .position-absolute {
+   visibility: hidden;
+   opacity: 0;
+   transition: opacity 0.5s ease;
+ }
+
+ /* CLASSES RESPONSÁVEIS PELOS CARDS DO PRODUTO --- FIM */
+
+ /* DIVISOR INÍCIO*/
+ .divider {
+   width: 100%;
+   height: 1.5rem;
+   background-color: rgba(0, 0, 0, .1);
+   border: solid rgba(0, 0, 0, .15);
+   border-width: 1px 0;
+   box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+   margin-top: 1em;
+ }
+
+ /* DIVISOR INÍCIO*/
