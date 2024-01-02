@@ -15,7 +15,7 @@
     <div class="container col-xl-10 col-xxl-8 px-4 py-5">
         <div class="row align-items-center g-lg-5 py-5">
             <div class="col-lg-7 text-center text-lg-start">
-                <a title="Voltar à página principal" href="index.html">
+                <a title="Voltar à página principal" href="index.php">
                     <img src="assets/img/logo.svg" width="150" height="150" alt="Logo para retorno À página principal">
                 </a>
                 <h1 class="display-4 fw-bold lh-1 text-body-emphasis mb-3"><em>Área de acesso</em></h1>
@@ -52,7 +52,7 @@
                                 <path
                                     d="M6.75 1a.75.75 0 0 1 .75.75V8a.5.5 0 0 0 1 0V5.467l.086-.004c.317-.012.637-.008.816.027.134.027.294.096.448.182.077.042.15.147.15.314V8a.5.5 0 0 0 1 0V6.435l.106-.01c.316-.024.584-.01.708.04.118.046.3.207.486.43.081.096.15.19.2.259V8.5a.5.5 0 1 0 1 0v-1h.342a1 1 0 0 1 .995 1.1l-.271 2.715a2.5 2.5 0 0 1-.317.991l-1.395 2.442a.5.5 0 0 1-.434.252H6.118a.5.5 0 0 1-.447-.276l-1.232-2.465-2.512-4.185a.517.517 0 0 1 .809-.631l2.41 2.41A.5.5 0 0 0 6 9.5V1.75A.75.75 0 0 1 6.75 1M8.5 4.466V1.75a1.75 1.75 0 1 0-3.5 0v6.543L3.443 6.736A1.517 1.517 0 0 0 1.07 8.588l2.491 4.153 1.215 2.43A1.5 1.5 0 0 0 6.118 16h6.302a1.5 1.5 0 0 0 1.302-.756l1.395-2.441a3.5 3.5 0 0 0 .444-1.389l.271-2.715a2 2 0 0 0-1.99-2.199h-.581a5.114 5.114 0 0 0-.195-.248c-.191-.229-.51-.568-.88-.716-.364-.146-.846-.132-1.158-.108l-.132.012a1.26 1.26 0 0 0-.56-.642 2.632 2.632 0 0 0-.738-.288c-.31-.062-.739-.058-1.05-.046zm2.094 2.025" />
                             </svg></a></p>
-                    <p>Não possui conta? <a href="#" data-bs-toggle="modal" data-bs-target="#modalSignin"
+                    <p>Não possui conta? <a href="#" data-bs-toggle="modal" data-bs-target="#modalSignup"
                             title="Criar conta" class="text-decoration-none badge text-bg-warning fs-6">Criar <svg
                                 xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 class="bi bi-hand-index-thumb" viewBox="0 0 16 16">
@@ -124,19 +124,19 @@
     <!-- FORMULÁRIOS RECUPERAR SENHA - fim -->
 
     <!-- FORMULÁRIO CRIAR CONTA - início -->
-    <div class="modal fade" id="modalSignin" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="modalSignup" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content rounded-4 shadow">
                 <div class="modal-header p-5 pb-4 border-bottom-0">
                     <h1 class="fw-bold mb-0 fs-2">Criar conta</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button id="closeSignup" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
                 <div class="modal-body p-5 pt-0">
-                    <form class="">
+                    <form id="signupForm" method="POST">
                         <div class="form-floating mb-3">
-                            <input type="email" class="form-control rounded-3" id="nameCreate" name="nameCreate"
-                                placeholder="nome@exemplo.com" required>
+                            <input type="text" class="form-control rounded-3" id="nameCreate" name="nameCreate"
+                                placeholder="" required>
                             <label for="nameCreate">Nome completo</label>
                         </div>
                         <div class="form-floating mb-3">
@@ -155,11 +155,11 @@
                             <label for="passwordCreate2">Confirmar senha</label>
                         </div>
                         <div class="form-check text-start my-3">
-                            <input class="form-check-input" type="checkbox" id="userAgreed" name="userAgreed">
+                            <input class="form-check-input" type="checkbox" id="userAgreed" name="userAgreed" required>
                             <label class="form-check-label" for="userAgreed">
                                 <small>Concordo que li e aceito os <a title="Termos de uso da CO2 Peças"
                                         href="terms.html" target="_blank">Termos de uso</a> e <a
-                                        title="Políticas da CO2 Peças" href="politics.html"
+                                        title="Políticas da CO2 Peças" href="policies.php"
                                         target="_blank">Políticas</a> do site.</small>
                             </label>
                         </div>
@@ -171,8 +171,11 @@
         </div>
     </div>
     <!-- FORMULÁRIO CRIAR CONTA - fim -->
-
+    <script src="ext/jquery/jquery-3.7.1.js"></script>
+    <script src="assets/js/access.js" async></script>
     <script src="ext/bootstrap/bootstrap.bundle.min.js"></script>
+
+
 </body>
 
 </html>

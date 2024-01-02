@@ -1,3 +1,23 @@
+<?php
+
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
+require_once('config/config.php');
+
+$session_expiration = 1800;
+
+if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > $session_expiration)) {
+    session_unset();
+    session_destroy();
+    exit();
+}
+
+$_SESSION['last_activity'] = time();
+
+?>
+
 <!doctype html>
 <html lang="pt-BR" data-bs-theme="auto">
 
@@ -106,7 +126,7 @@
     <header class="sticky-top">
         <nav class="navbar navbar-expand-lg bg-body-tertiary p-2">
             <div class="container-fluid">
-                <a title="Voltar à página principal" class="navbar-brand" href="index.html">
+                <a title="Voltar à página principal" class="navbar-brand" href="index.php">
                     <img src="assets/img/logo.svg" alt="Logo" width="40" height="40" class="d-inline-block">
                     <strong><em>CO2 Peças</em></strong>
                 </a>
@@ -141,7 +161,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a title="Realizar login ou criar conta" href="access.html" class="nav-link">
+                            <a title="Realizar login ou criar conta" href="access.php" class="nav-link">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
                                     class="bi bi-door-open" viewBox="0 0 16 16">
                                     <path d="M8.5 10c-.276 0-.5-.448-.5-1s.224-1 .5-1 .5.448.5 1-.224 1-.5 1" />
@@ -457,7 +477,7 @@
 
     <footer class="py-3 my-4">
         <ul class="nav justify-content-center pt-2 pb-3 mb-3">
-            <li class="nav-item"><a href="policies.html"
+            <li class="nav-item"><a href="policies.php"
                     class="nav-link px-2 link-body-emphasis text-primary">Políticas</a>
             </li>
             <li class="nav-item"><a href="terms.html" class="nav-link px-2 link-body-emphasis text-primary">Termos
