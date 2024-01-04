@@ -32,6 +32,7 @@
 
 .bd-mode-toggle {
     z-index: 1500;
+    margin-bottom: 7em;
 }
 
 .bd-mode-toggle .dropdown-menu .active .bi {
@@ -86,4 +87,11 @@
 
 .navbar .form-control {
     padding: .75rem 1rem;
+}
+
+td,
+th {
+    text-align: center;
+    vertical-align: middle;
+
 }

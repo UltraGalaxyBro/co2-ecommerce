@@ -21,7 +21,7 @@ require_once("../config/config.php");
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="author" content="CO2 Peças, Pablo Nogueira de Faria">
     <link rel="icon" href="../assets/img/logo.png" type="image/png">
-    <title>CO2 Peças - Sistema</title>
+    <title>CO2 Peças | Início</title>
     <link href="../ext/bootstrap/bootstrap.min.css" rel="stylesheet">
     <link href="../assets/css/system.css" rel="stylesheet">
 </head>
@@ -44,7 +44,7 @@ require_once("../config/config.php");
         </symbol>
     </svg>
 
-    <div class="dropdown position-fixed bottom-0 end-0 mb-3 me-3 bd-mode-toggle">
+    <div class="dropdown position-fixed bottom-0 end-0 me-3 bd-mode-toggle">
         <button title="Botão para trocar temas" class="btn btn-bd-primary py-2 dropdown-toggle d-flex align-items-center" id="bd-theme" type="button" aria-expanded="false" data-bs-toggle="dropdown" aria-label="Toggle theme (auto)">
             <svg class="bi my-1 theme-icon-active" width="1em" height="1em">
                 <use href="#circle-half"></use>
@@ -248,7 +248,7 @@ require_once("../config/config.php");
     </div>
     <script src="../ext/bootstrap/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.2/dist/chart.umd.js" integrity="sha384-eI7PSr3L1XLISH8JdDII5YN/njoSsxfbrkCTnJrzXt+ENP5MOVBxD+l6sEG4zoLp" crossorigin="anonymous"></script>
-    <script src="../assets/js/system.js"></script>
+    <script src="../assets/js/custom-chart.js"></script>
 </body>
 
 </html>
