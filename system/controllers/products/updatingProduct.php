@@ -3,33 +3,33 @@
 require_once('../../../config/config.php');
 require('functions.php');
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['idEdit']) {
+    $id = $_POST['idEdit'];
     //PRIMEIRA LINHA
-    $name = $_POST['nameCreate'];
-    $category = $_POST['categoryCreate'];
-    $automaker = $_POST['automakerCreate'];
-    $inside_code = $_POST['insideCodeCreate'];
+    $name = $_POST['nameEdit'];
+    $category = $_POST['categoryEdit'];
+    $automaker = $_POST['automakerEdit'];
+    $inside_code = $_POST['insideCodeEdit'];
     //SEGUNDA LINHA
-    $original_code = $_POST['originalCodeCreate'];
-    $brand = $_POST['brandCreate'];
-    $brand_code = $_POST['brandCodeCreate'];
-    $state = $_POST['stateCreate'];
+    $original_code = $_POST['originalCodeEdit'];
+    $brand = $_POST['brandEdit'];
+    $brand_code = $_POST['brandCodeEdit'];
+    $state = $_POST['stateEdit'];
     //TERCEIRA LINHA
-    $inventory = $_POST['inventoryCreate'];
-    $localization = $_POST['localizationCreate'];
-    $quantity = $_POST['quantityCreate'];
-    $quantity_min = $_POST['quantityMinCreate'];
+    $inventory = $_POST['inventoryEdit'];
+    $localization = $_POST['localizationEdit'];
+    $quantity = $_POST['quantityEdit'];
+    $quantity_min = $_POST['quantityMinEdit'];
     //QUARTA LINHA
-    $cost = $_POST['costCreate'];
-    $price = $_POST['priceCreate'];
-    $promotional = isset($_POST['promotionalCreate']) ? 1 : 0; // 1 se marcado, 0 se não marcado
-    $promotional_date = $_POST['promotionalDateCreate'];
-    $promotional_price = $_POST['promotionalPriceCreate'];
+    $cost = $_POST['costEdit'];
+    $price = $_POST['priceEdit'];
+    $promotional = isset($_POST['promotionalEdit']) ? 1 : 0; // 1 se marcado, 0 se não marcado
+    $promotional_date = $_POST['promotionalDateEdit'];
+    $promotional_price = $_POST['promotionalPriceEdit'];
     //QUINTA LINHA
-    $visible = isset($_POST['visibleCreate']) ? 1 : 0; // 1 se marcado, 0 se não marcado
-    $aplication = $_POST['aplicationCreate'];
-    $description = $_POST['descriptionCreate'];
+    $visible = isset($_POST['visibleEdit']) ? 1 : 0; // 1 se marcado, 0 se não marcado
+    $aplication = $_POST['aplicationEdit'];
+    $description = $_POST['descriptionEdit'];
     //SEXTA LINHA (DE IMAGENS) ESTÁ MAIS AO FINAL DO CÓDIGO NA HORA DE INSERIR NO BANCO DE DADOS E NO DIRETÓRIO
 
     if (!empty($original_code)) {
@@ -171,22 +171,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $main_path_img = "../../../assets/img/products/";
     $aditional_path_img = "../../../assets/img/products/extra/";
 
-    if (empty($_FILES['imgCreate']['name'])) {
+    if (empty($_FILES['imgEdit']['name'])) {
         $img0 = "default-image.png";
     } else {
-        $img0 = uploadImage('imgCreate', $main_path_img, $name_url, $original_code_url, $brand_code_url, 'imagemPrincipal');
+        $img0 = uploadImage('imgEdit', $main_path_img, $name_url, $original_code_url, $brand_code_url, 'imagemPrincipal');
     }
 
-    if (empty($_FILES['imgCreate1']['name'])) {
+    if (empty($_FILES['imgEdit1']['name'])) {
         $img1 = "default-image.png";
     } else {
-        $img1 = uploadImage('imgCreate1', $aditional_path_img, $name_url, $original_code_url, $brand_code_url, 'imagemExtra1');
+        $img1 = uploadImage('imgEdit1', $aditional_path_img, $name_url, $original_code_url, $brand_code_url, 'imagemExtra1');
     }
 
-    if (empty($_FILES['imgCreate2']['name'])) {
+    if (empty($_FILES['imgEdit2']['name'])) {
         $img2 = "default-image.png";
     } else {
-        $img2 = uploadImage('imgCreate2', $aditional_path_img, $name_url, $original_code_url, $brand_code_url, 'imagemExtra2');
+        $img2 = uploadImage('imgEdit2', $aditional_path_img, $name_url, $original_code_url, $brand_code_url, 'imagemExtra2');
     }
 
 

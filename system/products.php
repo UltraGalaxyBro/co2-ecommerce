@@ -34,12 +34,18 @@ require_once("../config/config.php");
 
         input[type="file"] {
             width: 138px;
+            margin-bottom: 10px;
             /* Ou um valor de largura de sua preferência */
         }
 
         .dt-buttons .btn {
             padding: 5px 10px;
             margin: 10px;
+        }
+
+        td {
+            text-align: center;
+            vertical-align: middle;
         }
     </style>
 </head>
@@ -251,23 +257,23 @@ require_once("../config/config.php");
                 </div>
 
                 <!-- TABELA PRODUTOS - início -->
-                <div class="table-responsive mb-5">
+                <div class="table-responsive mb-5 align-items-center">
                     <table id="products" class="table table-striped table-bordered" style="width:100%">
                         <thead>
                             <tr>
-                                <th style="text-align: center; vertical-align: middle;">
+                                <th class="text-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
                                         <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z" />
                                         <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0" />
                                     </svg>
                                 </th>
-                                <th style="text-align: center; vertical-align: middle;">Descrição</th>
-                                <th style="text-align: center; vertical-align: middle;">Referência</th>
-                                <th style="text-align: center; vertical-align: middle;"><small>Estoque</small></th>
-                                <th style="text-align: center; vertical-align: middle;"><small>Locação</small></th>
-                                <th style="text-align: center; vertical-align: middle;"><small>Qtd.</small></th>
-                                <th style="text-align: center; vertical-align: middle;"><small>Preço unitário</small></th>
-                                <th style="text-align: center; vertical-align: middle;">
+                                <th class="text-center">Descrição</th>
+                                <th class="text-center">Referência</th>
+                                <th class="text-center"><small>Estoque</small></th>
+                                <th class="text-center"><small>Locação</small></th>
+                                <th class="text-center"><small>Qtd.</small></th>
+                                <th class="text-center" style="font-size: 15px;"><small>Preço unitário</small></th>
+                                <th class="text-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
                                         <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
                                     </svg>
@@ -275,41 +281,43 @@ require_once("../config/config.php");
                             </tr>
                         </thead>
                         <tbody>
+                            <!--
                             <tr>
-                                <td style="text-align: center; vertical-align: middle;">
+                                <td>
                                     <img src="../assets/img/products/default-image.png" width="40px" alt="Imagem do produto">
                                 </td>
-                                <td style="text-align: center; vertical-align: middle;">
+                                <td>
                                     <small>
                                         ROLAMENTO VOLANTE DO MOTOR
                                     </small>
                                 </td>
-                                <td style="text-align: center; vertical-align: middle;">
+                                <td>
                                     <small>
                                         21102685 (VOLVO) • 631903H195 (FAG)
                                     </small>
                                 </td>
-                                <td style="text-align: center; vertical-align: middle;">
+                                <td>
                                     <small>
                                         LOCAL
                                     </small>
                                 </td>
-                                <td style="text-align: center; vertical-align: middle;">
+                                <td>
                                     <small>
                                         P3-T
                                     </small>
                                 </td>
-                                <td style="text-align: center; vertical-align: middle;">
+                                <td>
                                     <small>
                                         # 1
                                     </small>
                                 </td>
-                                <td style="text-align: center; vertical-align: middle;">
+                                <td>
                                     <small>
                                         R$ 320,80
                                     </small>
                                 </td>
-                                <td style="text-align: center; vertical-align: middle;">
+                                
+                                <td>
                                     <div class="btn-group" role="group" aria-label="Basic mixed styles example">
                                         <button type="button" title="Editar produto" class="btn btn-sm btn-warning">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
@@ -324,7 +332,7 @@ require_once("../config/config.php");
                                         </button>
                                     </div>
                                 </td>
-                            </tr>
+                            </tr>-->
                         </tbody>
                     </table>
                 </div>
@@ -351,14 +359,14 @@ require_once("../config/config.php");
                 </div>
 
                 <!-- Modal cadastrar Produto-->
-                <div class="modal fade" id="createModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="modalTitleCreate" aria-hidden="true">
+                <div class="modal fade" id="createModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="Cadastrando produto" aria-hidden="true">
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h1 class="modal-title fs-5" id="modalTitleCreate">Cadastrando produto</h1>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
-                            <form id="createProduct" method="post" enctype="multipart/form-data">
+                            <form id="createProduct" class="" method="post">
                                 <div class="modal-body">
                                     <!--PRIMEIRA LINHA-->
                                     <div class="row gy-2 gx-3 align-items-center justify-content-center">
@@ -375,6 +383,7 @@ require_once("../config/config.php");
                                                 <input placeholder="" type="text" maxlength="25" class="form-control" id="categoryCreate" name="categoryCreate">
                                                 <label for="categoryCreate">Categoria</label>
                                             </div>
+                                            <div id="categorySuggestions"></div>
                                         </div>
 
                                         <div class="col-md-3">
@@ -396,8 +405,8 @@ require_once("../config/config.php");
 
                                         <div class="col-md-3">
                                             <div class="form-floating mb-2">
-                                                <input placeholder="" type="text" maxlength="30" class="form-control" id="originalCodeCreate" name="originalCodeCreate">
-                                                <label for="originalCodeCreate">Código original</label>
+                                                <input placeholder="" type="text" maxlength="30" class="form-control" id="insideCodeCreate" name="insideCodeCreate">
+                                                <label for="insideCodeCreate">Código interno</label>
                                             </div>
                                         </div>
 
@@ -405,6 +414,13 @@ require_once("../config/config.php");
 
                                     <!--SEGUNDA LINHA-->
                                     <div class="row gy-2 gx-3 align-items-center justify-content-center">
+
+                                        <div class="col-md-3">
+                                            <div class="form-floating mb-2">
+                                                <input placeholder="" type="text" maxlength="30" class="form-control" id="originalCodeCreate" name="originalCodeCreate">
+                                                <label for="originalCodeCreate">Código original</label>
+                                            </div>
+                                        </div>
 
                                         <div class="col-md-3">
                                             <div class="form-floating mb-2">
@@ -430,6 +446,11 @@ require_once("../config/config.php");
                                             </div>
                                         </div>
 
+                                    </div>
+
+                                    <!--TERCEIRA LINHA-->
+                                    <div id="optionsLocalInventory" class="row gy-2 gx-3 align-items-center justify-content-center">
+
                                         <div class="col-md-3">
                                             <div class="form-floating mb-2">
                                                 <select class="form-select" id="inventoryCreate" name="inventoryCreate" aria-label="Tipo de estoque do produto">
@@ -440,30 +461,21 @@ require_once("../config/config.php");
                                             </div>
                                         </div>
 
-                                    </div>
-
-                                    <!--TERCEIRA LINHA (CASO O USUÁRIO SELECIONE ESTOQUE LOCAL)-->
-                                    <div id="optionsLocalInventory" class="row gy-2 gx-3 align-items-center justify-content-center" style="display:none">
-
-                                        <div class="col-md-3">
-                                            <label class="col-form-label"><small><strong>Detalhes de estoque LOCAL</strong></small></label>
-                                        </div>
-
-                                        <div class="col-md-3">
+                                        <div id="atLocalOption1" class="col-md-3" style="display:none">
                                             <div class="form-floating mb-2">
                                                 <input placeholder="" type="text" maxlength="20" class="form-control" id="localizationCreate" name="localizationCreate">
                                                 <label for="localizationCreate">Localização</label>
                                             </div>
                                         </div>
 
-                                        <div class="col-md-3">
+                                        <div id="atLocalOption2" class="col-md-3" style="display:none">
                                             <div class="form-floating mb-2">
                                                 <input placeholder="" type="number" class="form-control" id="quantityCreate" name="quantityCreate">
                                                 <label for="quantityCreate"><small>Estoque</small></label>
                                             </div>
                                         </div>
 
-                                        <div class="col-md-3">
+                                        <div id="atLocalOption3" class="col-md-3" style="display:none">
                                             <div class="form-floating mb-2">
                                                 <input placeholder="" type="number" class="form-control" id="quantityMinCreate" name="quantityMinCreate">
                                                 <label for="quantityMinCreate"><small>Estoque baixo</small></label>
@@ -551,7 +563,7 @@ require_once("../config/config.php");
                                             <div class="form-group text-center">
                                                 <label><small><strong>Imagem principal</strong></small></label>
                                                 <input type="file" value="" class="form-control-file" id="imgCreate" name="imgCreate" placeholder="Imagem">
-                                                <img src="../assets/img/products/default-image.png" width="140" height="140" id="targetImgCreate" alt="Imagem principal do produto">
+                                                <img src="../assets/img/products/default-image.png" class="rounded" width="140" height="140" id="targetImgCreate" alt="Imagem principal do produto">
                                                 <button class="btn btn-sm btn-outline-danger" type="button" onclick="clearImage('imgCreate', 'targetImgCreate')">X</button>
                                             </div>
                                         </div>
@@ -560,13 +572,13 @@ require_once("../config/config.php");
                                             <div class="form-group text-center mb-2" style="display: none;">
                                                 <label><small><strong>1ª imagem adicional</strong></small></label>
                                                 <input type="file" value="" class="form-control-file" id="imgCreate1" name="imgCreate1" placeholder="Imagem">
-                                                <img src="../assets/img/products/default-image.png" width="75" height="75" id="targetImgCreate1" alt="1ª imagem adicional do produto">
+                                                <img src="../assets/img/products/default-image.png" class="rounded" width="75" height="75" id="targetImgCreate1" alt="1ª imagem adicional do produto">
                                                 <button class="btn btn-sm btn-outline-danger" type="button" onclick="clearImage('imgCreate1', 'targetImgCreate1')">X</button>
                                             </div>
                                             <div class="form-group text-center mb-2" style="display: none;">
                                                 <label><small><strong>2ª imagem adicional</strong></small></label>
                                                 <input type="file" value="" class="form-control-file" id="imgCreate2" name="imgCreate2" placeholder="Imagem">
-                                                <img src="../assets/img/products/default-image.png" width="75" height="75" id="targetImgCreate2" alt="2ª imagem adicional do produto">
+                                                <img src="../assets/img/products/default-image.png" class="rounded" width="75" height="75" id="targetImgCreate2" alt="2ª imagem adicional do produto">
                                                 <button class="btn btn-sm btn-outline-danger" type="button" onclick="clearImage('imgCreate2', 'targetImgCreate2')">X</button>
                                             </div>
                                         </div>
@@ -586,14 +598,271 @@ require_once("../config/config.php");
                         </div>
                     </div>
                 </div>
+
+                <!-- Modal editar Produto-->
+                <div class="modal fade" id="editModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="Editando produto" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="modalTitleCreate">Editando produto</h1>
+                                <small><span id="editFirstRecord" class="mx-2 text-info"></span>
+                                <span id="editLastRecord" class="mx-2 text-warning"></span></small>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <form id="editProduct" method="post">
+                                <div class="modal-body">
+                                    <!--PRIMEIRA LINHA-->
+                                    <div class="row gy-2 gx-3 align-items-center justify-content-center">
+
+                                        <div class="col-md-3">
+                                            <div class="form-floating mb-2">
+                                                <input placeholder="" type="text" maxlength="50" class="form-control" id="nameEdit" name="nameEdit">
+                                                <label for="nameEdit">Nome do produto</label>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <div class="form-floating mb-2">
+                                                <input placeholder="" type="text" maxlength="25" class="form-control" id="categoryEdit" name="categoryEdit">
+                                                <label for="categoryEdit">Categoria</label>
+                                            </div>
+                                            <div id="categorySuggestions"></div>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <div class="form-floating mb-2">
+                                                <select class="form-select" id="automakerEdit" name="automakerEdit" aria-label="Opções de montadoras">
+                                                    
+                                                </select>
+                                                <label for="automakerEdit">Montadora</label>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <div class="form-floating mb-2">
+                                                <input placeholder="" type="text" maxlength="30" class="form-control" id="insideCodeEdit" name="insideCodeEdit">
+                                                <label for="insideCodeEdit">Código interno</label>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <!--SEGUNDA LINHA-->
+                                    <div class="row gy-2 gx-3 align-items-center justify-content-center">
+
+                                        <div class="col-md-3">
+                                            <div class="form-floating mb-2">
+                                                <input placeholder="" type="text" maxlength="30" class="form-control" id="originalCodeEdit" name="originalCodeEdit">
+                                                <label for="originalCodeEdit">Código original</label>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <div class="form-floating mb-2">
+                                                <input placeholder="" type="text" maxlength="25" class="form-control" id="brandEdit" name="brandEdit">
+                                                <label for="brandEdit">Marca</label>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <div class="form-floating mb-2">
+                                                <input placeholder="" type="text" maxlength="30" class="form-control" id="brandCodeEdit" name="brandCodeEdit">
+                                                <label for="brandCodeEdit">Código do fabricante</label>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <div class="form-floating mb-2">
+                                                <select class="form-select" id="stateEdit" name="stateEdit" aria-label="Condição do produto">
+                                                    <option selected value='Novo'>Novo</option>
+                                                    <option value='Seminovo'>Seminovo</option>
+                                                </select>
+                                                <label for="stateEdit">Condição</label>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <!--TERCEIRA LINHA-->
+                                    <div class="row gy-2 gx-3 align-items-center justify-content-center">
+
+                                        <div class="col-md-3">
+                                            <div class="form-floating mb-2">
+                                                <select class="form-select" id="inventoryEdit" name="inventoryEdit" aria-label="Tipo de estoque do produto">
+                                                    
+                                                </select>
+                                                <label for="inventoryEdit">Tipo de estoque</label>
+                                            </div>
+                                        </div>
+
+                                        <div id="atLocalOption4" class="col-md-3" style="display:none">
+                                            <div class="form-floating mb-2">
+                                                <input placeholder="" type="text" maxlength="20" class="form-control" id="localizationEdit" name="localizationEdit">
+                                                <label for="localizationEdit">Localização</label>
+                                            </div>
+                                        </div>
+
+                                        <div id="atLocalOption5" class="col-md-3" style="display:none">
+                                            <div class="form-floating mb-2">
+                                                <input placeholder="" type="number" class="form-control" id="quantityEdit" name="quantityEdit">
+                                                <label for="quantityEdit"><small>Estoque</small></label>
+                                            </div>
+                                        </div>
+
+                                        <div id="atLocalOption6" class="col-md-3" style="display:none">
+                                            <div class="form-floating mb-2">
+                                                <input placeholder="" type="number" class="form-control" id="quantityMinEdit" name="quantityMinEdit">
+                                                <label for="quantityMinEdit"><small>Estoque baixo</small></label>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <!--QUARTA LINHA-->
+                                    <div class="row gy-2 gx-3 align-items-center justify-content-center">
+
+                                        <div class="col-md-2">
+                                            <div class="form-floating mb-2">
+                                                <input placeholder="" type="number" step="0.01" class="form-control" id="costEdit" name="costEdit">
+                                                <label for="costEdit">Custo (R$)</label>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-2">
+                                            <div class="form-floating mb-2">
+                                                <input placeholder="" type="number" step="0.01" class="form-control" id="priceEdit" name="priceEdit">
+                                                <label for="priceEdit">Preço (R$)</label>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="promotionalEdit" id="promotionalEdit">
+                                                <label class="form-check-label" for="promotionalEdit">
+                                                    Habilitar Promoção
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <!-- VISIVEIS QUANDO A PROMOÇÃO ESTIVER MARCADA -->
+
+                                        <div id="promotionalOptionEdit4" class="col-md-3" style="display: none;">
+                                            <div class="form-floating mb-2">
+                                                <input placeholder="" type="date" class="form-control" id="promotionalDateEdit" name="promotionalDateEdit">
+                                                <label for="promotionalDateEdit">Promoção válida até...</label>
+                                            </div>
+                                        </div>
+
+                                        <div id="promotionalOptionEdit5" class="col-md-3" style="display: none;">
+                                            <div class="form-floating mb-2">
+                                                <input placeholder="" type="number" step="0.01" class="form-control" id="promotionalPriceEdit" name="promotionalPriceEdit">
+                                                <label for="promotionalPriceEdit">Promoção (R$)</label>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <!--QUINTA LINHA-->
+                                    <div class="row gy-2 gx-3 align-items-center justify-content-center">
+
+                                        <div class="col-md-3 mb-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="visibleEdit" id="visibleEdit">
+                                                <label class="form-check-label" for="visibleEdit">
+                                                    Visível em site
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div id="visibleOptionEdit1" class="col-md-5 mb-2" style="display: none;">
+                                            <div class="form-floating">
+                                                <textarea rows="1" maxlength="150" class="form-control" placeholder="" id="aplicationEdit" name="aplicationEdit"></textarea>
+                                                <label for="aplicationEdit">Aplicação do produto</label>
+                                            </div>
+                                        </div>
+
+                                        <div id="visibleOptionEdit2" class="col-md-4 mb-2" style="display: none;">
+                                            <div class="form-floating">
+                                                <textarea rows="1" maxlength="100" class="form-control" placeholder="" id="descriptionEdit" name="descriptionEdit"></textarea>
+                                                <label for="descriptionEdit">Descrição do produto em site</label>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <!--SEXTA LINHA -->
+                                    <div class="row gy-2 gx-3 align-items-center justify-content-center">
+
+                                        <div class="col-md-6 mb-2">
+                                            <div class="form-group text-center">
+                                                <label><small><strong>Imagem principal</strong></small></label>
+                                                <input type="file" class="form-control-file" id="imgEdit" name="imgEdit" placeholder="Imagem">
+                                                <img src="" class="rounded" width="140" height="140" id="targetImgEdit" alt="Imagem principal do produto">
+                                                <button class="btn btn-sm btn-outline-danger" type="button" onclick="clearImage2('imgEdit', 'targetImgEdit')">X</button>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6 mb-2">
+                                            <div class="form-group text-center mb-2" style="display: none;">
+                                                <label><small><strong>1ª imagem adicional</strong></small></label>
+                                                <input type="file" value="" class="form-control-file" id="imgEdit1" name="imgEdit1" placeholder="Imagem">
+                                                <img src="../assets/img/products/default-image.png" class="rounded" width="75" height="75" id="targetImgEdit1" alt="1ª imagem adicional do produto">
+                                                <button class="btn btn-sm btn-outline-danger" type="button" onclick="clearImage2('imgEdit1', 'targetImgEdit1')">X</button>
+                                            </div>
+                                            <div class="form-group text-center mb-2" style="display: none;">
+                                                <label><small><strong>2ª imagem adicional</strong></small></label>
+                                                <input type="file" value="" class="form-control-file" id="imgEdit2" name="imgEdit2" placeholder="Imagem">
+                                                <img src="../assets/img/products/default-image.png" class="rounded" width="75" height="75" id="targetImgEdit2" alt="2ª imagem adicional do produto">
+                                                <button class="btn btn-sm btn-outline-danger" type="button" onclick="clearImage2('imgEdit2', 'targetImgEdit2')">X</button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <div class="row">
+                                        <div id="loadingEditProduct" style="display: none;" class="spinner-border text-primary" role="status">
+                                            <span class="visually-hidden">Processando...</span>
+                                        </div>
+                                        <div id="messageEditProduct" class="fw-bold text-center"></div>
+                                    </div>
+                                    <input id="imgEditTxt" name="imgEditTxt" type="hidden">
+                                    <input id="imgEditTxt1" name="imgEditTxt1" type="hidden">
+                                    <input id="imgEditTxt2" name="imgEditTxt2" type="hidden">
+                                    <input id="idEdit" name="idEdit" type="hidden">
+                                    <button id="EditProductBtn" type="submit" class="btn btn-primary">Salvar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal excluir Produto-->
+                <div class="modal fade" id="deleteModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="Excluindo produto" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Excluindo produto</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                ...
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary">Excluir</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </main>
         </div>
     </div>
-    <script src="../ext/bootstrap/bootstrap.bundle.min.js"></script>
     <script src="../ext/jquery/jquery-3.7.1.js"></script>
+    <script src="../ext/bootstrap/bootstrap.bundle.min.js"></script>
     <script src="../ext/datatables/datatables.min.js"></script>
     <script src="../ext/datatables/pdfmake.min.js"></script>
     <script src="../ext/datatables/vfs_fonts.js"></script>
+    <script src="../ext/datatables/moment.min.js"></script>
     <script src="../assets/js/custom-datatables.js"></script>
     <script src="../assets/js/products-system.js"></script>
 </body>

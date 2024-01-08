@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     } catch (Exception $e) {
         $pdo->rollBack();
-        echo "Erro ao criar a conta: " . $e->getMessage();
+        echo "Erro ao entrar na conta: " . $e->getMessage();
     }
 } else {
     http_response_code(405);

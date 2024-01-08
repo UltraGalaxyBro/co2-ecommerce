@@ -33,6 +33,7 @@ try {
     throw new Exception("Erro ao conectar com o banco de dados: " . $e->getMessage());
 }
 
+$apiLockProducts = "AI7x234567890qwertYuiopASDFGHJKLZXCVBNM";
 //--------------------------------------------------VARIÁVEIS MERCADO PAGO (PARA TESTE)---------------------------------
 //$publicKey = 'APP_USR-751ebaf9-fb3f-4c02-b358-18f833e72749';
 //$accessToken = 'APP_USR-6264618872891318-102609-d94ce79c8735dad85b48fc2fc19ab485-1525869796';
