@@ -94,3 +94,106 @@ function uploadImage($fieldFile, $directory, $partialName, $partialName1, $parti
     $definitiveName = $newNameImg . '.' . $ext;
     return $definitiveName;
 }
+
+// FUNÇÃO PARA APAGAR IMAGEM DO DIRETÓRIO
+function eraseImage($imgName, $directory)
+{
+    $fullPath = $directory .  $imgName;
+
+    try {
+        if (file_exists($fullPath)) {
+
+            if (unlink($fullPath)) {
+                return true;
+            } else {
+                throw new Exception("Erro ao tentar apagar a imagem antiga $imgName.");
+            }
+        } else {
+            throw new Exception("A imagem $imgName não foi encontrada no diretório $directory.");
+        }
+    } catch (Exception $e) {
+        echo "Erro: " . $e->getMessage();
+        return false;
+    }
+}
+
+// FUNÇÃO CRIANDO CATEGORIA NÃO-DUPLICADA
+function creatingCategory($nameCategory, $pdo)
+{
+    try {
+        $stmt = $pdo->prepare("SELECT * FROM categories WHERE name = :name");
+        $stmt->bindParam(':name', $nameCategory);
+        $stmt->execute();
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if (count($results) == 0) {
+            $sqlCategory = "INSERT INTO categories (name) VALUES (:name)";
+            $resCategory = $pdo->prepare($sqlCategory);
+            $resCategory->bindValue(":name", $nameCategory);
+            $resCategory->execute();
+        }
+    } catch (PDOException $e) {
+        // Tratar exceções do PDO (por exemplo, logar o erro, redirecionar para uma página de erro, etc.)
+        echo "Erro: " . $e->getMessage();
+    }
+}
+
+// FUNÇÃO CRIANDO CATEGORIA NÃO-DUPLICADA
+function creatingBrand($nameBrand, $pdo)
+{
+    try {
+        $stmt = $pdo->prepare("SELECT * FROM brands WHERE name = :name");
+        $stmt->bindParam(':name', $nameBrand);
+        $stmt->execute();
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if (count($results) == 0) {
+            $sqlBrand = "INSERT INTO brands (name) VALUE (:name)";
+            $resBrand = $pdo->prepare($sqlBrand);
+            $resBrand->bindValue(":name", $nameBrand);
+            $resBrand->execute();
+        }
+    } catch (PDOException $e) {
+        echo "Erro: " . $e->getMessage();
+    }
+}
+
+// FUNÇÃO DELETANDO CATEGORIA
+
+function deletingCategory($idCategory, $pdo)
+{
+    try {
+        $pdo->beginTransaction();
+
+        $stmt = $pdo->prepare("SELECT name FROM categories WHERE id = :id");
+        $stmt->bindParam(':id', $idCategory, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $categoryName = $stmt->fetchColumn();
+        
+        if ($categoryName) {
+            $updateProductsStmt = $pdo->prepare("UPDATE products SET category = 'INDEFINIDO' WHERE category = :category");
+            $updateProductsStmt->bindParam(':category', $categoryName, PDO::PARAM_STR);
+            $updateProductsStmt->execute();
+
+            $deleteCategoryStmt = $pdo->prepare("DELETE FROM categories WHERE id = :id");
+            $deleteCategoryStmt->bindParam(':id', $idCategory, PDO::PARAM_INT);
+            $deleteCategoryStmt->execute();
+
+            $pdo->commit();
+            return true;
+        } else {
+            $pdo->rollBack();
+            return false;
+        }
+    } catch (Exception $e) {
+        $pdo->rollBack();
+        return false;
+    }
+}
+
+
+// FUNÇÃO DELETANDO MARCA
+function deletingBrand($idBrand)
+{
+}

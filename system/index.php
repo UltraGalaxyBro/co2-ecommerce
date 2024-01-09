@@ -8,6 +8,17 @@ if (@$_SESSION['id'] == null || ($_SESSION['user_type'] != 'admin' && $_SESSION[
     echo "<script language='javascript'>window.location='../access.php'</script>";
 }
 
+$session_expiration = 1800;
+
+if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > $session_expiration)) {
+    session_unset();
+    session_destroy();
+    session_start();
+}
+
+// Renovar a sessão a cada ação significativa do usuário
+$_SESSION['last_activity'] = time();
+
 require_once("../config/config.php");
 
 ?>

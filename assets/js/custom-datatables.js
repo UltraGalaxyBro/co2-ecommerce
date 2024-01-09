@@ -18,6 +18,9 @@ $(document).ready(function () {
             {
                 data: 'img0',
                 render: function (data, type, row) {
+                    if (data == null || data == '') {
+                        data = 'default-image.png';
+                    }
                     var imageUrl = '../assets/img/products/' + data;
                     return '<td><img class="rounded" src="' + imageUrl + '" width="40px" alt="Imagem do produto"></td>';
                 }
@@ -76,7 +79,7 @@ $(document).ready(function () {
                         '<path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />' +
                         '</svg>' +
                         '</button>' +
-                        '<button type="button" title="Excluir produto" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" data-product-id="' + data + '">' +
+                        '<button type="button" title="Excluir produto" id="deleteButton" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" data-product-id="' + data + '">' +
                         '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eraser" viewBox="0 0 16 16">' +
                         '<path d="M8.086 2.207a2 2 0 0 1 2.828 0l3.879 3.879a2 2 0 0 1 0 2.828l-5.5 5.5A2 2 0 0 1 7.879 15H5.12a2 2 0 0 1-1.414-.586l-2.5-2.5a2 2 0 0 1 0-2.828l6.879-6.879zm2.121.707a1 1 0 0 0-1.414 0L4.16 7.547l5.293 5.293 4.633-4.633a1 1 0 0 0 0-1.414l-3.879-3.879zM8.746 13.547 3.453 8.254 1.914 9.793a1 1 0 0 0 0 1.414l2.5 2.5a1 1 0 0 0 .707.293H7.88a1 1 0 0 0 .707-.293l.16-.16z" />' +
                         '</svg>' +
@@ -128,12 +131,16 @@ $(document).ready(function () {
                 $('#automakerEdit').val(data.automaker);
                 // INTERNO DO PRODUTO
                 $('#insideCodeEdit').val(data.inside_code);
-                // ORIGINAL DO PRODUTO
+                // CÓDIGO ORIGINAL DO PRODUTO
                 $('#originalCodeEdit').val(data.original_code);
+                // CÓDIGO PARA AUXILIAR NA VERIFICAÇÃO DE NÃO HAVER DUPLICATAS
+                $('#oldOriginalCode').val(data.original_code);
                 // MARCA DO PRODUTO
                 $('#brandEdit').val(data.brand);
-                // FABRICANTE DO PRODUTO
+                // CÓDIGO FABRICANTE DO PRODUTO
                 $('#brandCodeEdit').val(data.brand_code);
+                // CÓDIGO PARA AUXILIAR NA VERIFICAÇÃO DE NÃO HAVER DUPLICATAS
+                $('#oldBrandCode').val(data.brand_code);
                 // CONDIÇÃO DO PRODUTO
                 $('#stateEdit').empty();
                 $('#stateEdit').append("<option value='" + data.state + "' selected>" + data.state + "</option>");
@@ -216,6 +223,45 @@ $(document).ready(function () {
 
                 // ID DO PRODUTO
                 $('#idEdit').val(data.id);
+
+            },
+            error: function (xhr, status, error) {
+                console.error('Erro ao obter dados da API. Status: ' + status + ', Erro: ' + error);
+            }
+        });
+    });
+
+    $(document).on('click', '#deleteButton', function () {
+
+        var dynamicId = $(this).data('product-id');
+        var apiUrl = 'http://localhost/co2-ecommerce/system/controllers/products/apirest/apiProducts.php?api_key=AI7x234567890qwertYuiopASDFGHJKLZXCVBNM&route=get&id=' + dynamicId;
+
+        $.ajax({
+            url: apiUrl,
+            method: 'GET',
+            dataType: 'json',
+            success: function (response) {
+                var data = response.data;
+
+                // PRIMEIRA IMAGEM
+                if (data.img0 !== '' && data.img0 !== null) {
+                    var src = "../assets/img/products/" + data.img0;
+                    
+                } else {
+                    var src = "../assets/img/products/default-image.png";
+  
+                }
+
+                $('#delProdImg').attr('src', src);
+                $('#delProdName').text(data.name);
+                $('#delProdInsideCode').text(data.inside_code);
+                $('#delProdAutomaker').text(data.automaker);
+                $('#delProdOriCode').text(data.original_code);
+                $('#DelProdBrand').text(data.brand);
+                $('#DelProdBrandCode').text(data.brand_code);
+
+                // ID DO PRODUTO
+                $('#idDelete').val(data.id);
 
             },
             error: function (xhr, status, error) {

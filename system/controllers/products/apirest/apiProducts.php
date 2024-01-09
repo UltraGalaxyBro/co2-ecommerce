@@ -16,7 +16,7 @@ $route = isset($_GET['route']) ? $_GET['route'] : null;
 // Função para buscar todos os produtos
 function getAll($pdo)
 {
-    
+
     try {
         $stmt = $pdo->query('SELECT * FROM products');
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -29,7 +29,7 @@ function getAll($pdo)
 // Função para buscar todos os produtos em estoque LOCAL
 function getAllLocal($pdo)
 {
-    
+
     try {
         $stmt = $pdo->query('SELECT * FROM products WHERE inventory = "LOCAL"');
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -42,7 +42,7 @@ function getAllLocal($pdo)
 // Função para buscar todos os produtos em estoque VIRTUAL
 function getAllVirtual($pdo)
 {
-    
+
     try {
         $stmt = $pdo->query('SELECT * FROM products WHERE inventory = "VIRTUAL"');
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -55,7 +55,7 @@ function getAllVirtual($pdo)
 // Função para buscar um produto por ID
 function getById($pdo, $id)
 {
- 
+
     try {
         $stmt = $pdo->prepare('SELECT * FROM products WHERE id = ?');
         $stmt->execute([$id]);
@@ -76,13 +76,26 @@ function getCategories($pdo)
 {
 
     try {
-        $stmt = $pdo->query('SELECT category FROM products');
+        $stmt = $pdo->query('SELECT name FROM categories');
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return json_encode(["data" => $results]);
     } catch (PDOException $e) {
         return json_encode(["error" => "Erro ao buscar as categorias dos produtos"]);
     }
 }
+
+function getBrands($pdo)
+{
+
+    try {
+        $stmt = $pdo->query('SELECT name FROM brands');
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return json_encode(["data" => $results]);
+    } catch (PDOException $e) {
+        return json_encode(["error" => "Erro ao buscar as marcas dos produtos"]);
+    }
+}
+
 
 // Roteamento de acordo com a rota
 switch ($route) {
@@ -97,6 +110,9 @@ switch ($route) {
         break;
     case 'categories':
         echo getCategories($pdo);
+        break;
+    case 'brands':
+        echo getBrands($pdo);
         break;
     case 'get':
         $productId = isset($_GET['id']) ? $_GET['id'] : null;

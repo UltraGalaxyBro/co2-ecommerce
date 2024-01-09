@@ -260,17 +260,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         if ($res->execute()) {
             //VERIFFICAÇÃO SE TAL CATEGORIA EXISTE. CASO NÃO, ADICIONE-A NO BANCO DE DADOS
-            $stmt = $pdo->prepare("SELECT * FROM categories WHERE name = :name");
-            $stmt->bindParam(':name', $category);
-            $stmt->execute();
-            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            creatingCategory($category, $pdo);
 
-            if (count($results) == 0) {
-                $sqlCategory = "INSERT INTO categories (name) VALUE (:name)";
-                $resCategory = $pdo->prepare($sqlCategory);
-                $resCategory->bindValue(":name", $category);
-                $resCategory->execute();
-            }
+            //VERIFFICAÇÃO SE TAL MARCA EXISTE. CASO NÃO, ADICIONE-A NO BANCO DE DADOS
+            creatingBrand($brand, $pdo);
+
             $pdo->commit();
             echo 'Success!';
         } else {

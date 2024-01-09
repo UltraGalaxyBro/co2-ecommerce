@@ -8,6 +8,16 @@ if (@$_SESSION['id'] == null || ($_SESSION['user_type'] != 'admin' && $_SESSION[
     echo "<script language='javascript'>window.location='../access.php'</script>";
 }
 
+$session_expiration = 1800;
+
+if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > $session_expiration)) {
+    session_unset();
+    session_destroy();
+    session_start();
+}
+
+$_SESSION['last_activity'] = time();
+
 require_once("../config/config.php");
 
 ?>
@@ -248,11 +258,13 @@ require_once("../config/config.php");
             </div>
             <!-- BARRA LATERAL - fim-->
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-                <!--CONTEÚDO DA PÁGINA - início-->
+                <!--CONTEÚDO DA PÁGINA VISÍVEL - início-->
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                     <h1 class="h2">Produtos</h1>
                     <div id="export-buttons"></div>
-                    <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#manipulateCategoriesModal">Categorias</button>
+
+                    <button id="manipulateCategories" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#manipulateCategoriesModal">Categorias</button>
+                    <button id="manipulateBrands" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#manipulateBrandsModal">Marcas</button>
                     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">+ Produto</button>
                 </div>
 
@@ -281,64 +293,13 @@ require_once("../config/config.php");
                             </tr>
                         </thead>
                         <tbody>
-                            <!--
-                            <tr>
-                                <td>
-                                    <img src="../assets/img/products/default-image.png" width="40px" alt="Imagem do produto">
-                                </td>
-                                <td>
-                                    <small>
-                                        ROLAMENTO VOLANTE DO MOTOR
-                                    </small>
-                                </td>
-                                <td>
-                                    <small>
-                                        21102685 (VOLVO) • 631903H195 (FAG)
-                                    </small>
-                                </td>
-                                <td>
-                                    <small>
-                                        LOCAL
-                                    </small>
-                                </td>
-                                <td>
-                                    <small>
-                                        P3-T
-                                    </small>
-                                </td>
-                                <td>
-                                    <small>
-                                        # 1
-                                    </small>
-                                </td>
-                                <td>
-                                    <small>
-                                        R$ 320,80
-                                    </small>
-                                </td>
-                                
-                                <td>
-                                    <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-                                        <button type="button" title="Editar produto" class="btn btn-sm btn-warning">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                                                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                                                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
-                                            </svg>
-                                        </button>
-                                        <button type="button" title="Excluir produto" class="btn btn-sm btn-danger">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eraser" viewBox="0 0 16 16">
-                                                <path d="M8.086 2.207a2 2 0 0 1 2.828 0l3.879 3.879a2 2 0 0 1 0 2.828l-5.5 5.5A2 2 0 0 1 7.879 15H5.12a2 2 0 0 1-1.414-.586l-2.5-2.5a2 2 0 0 1 0-2.828l6.879-6.879zm2.121.707a1 1 0 0 0-1.414 0L4.16 7.547l5.293 5.293 4.633-4.633a1 1 0 0 0 0-1.414l-3.879-3.879zM8.746 13.547 3.453 8.254 1.914 9.793a1 1 0 0 0 0 1.414l2.5 2.5a1 1 0 0 0 .707.293H7.88a1 1 0 0 0 .707-.293l.16-.16z" />
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>-->
+                            <!-- TABELA SENDO GERADA PELO ARQUIVO custom-datatables.js -->
                         </tbody>
                     </table>
                 </div>
                 <!-- TABELA PRODUTOS - início -->
 
-                <!--CONTEÚDO DA PÁGINA - fim-->
+                <!--CONTEÚDO DA PÁGINA VISÍVEL- fim-->
 
                 <!-- Modal Categorias-->
                 <div class="modal fade" id="manipulateCategoriesModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="Categorias" aria-hidden="true">
@@ -346,6 +307,46 @@ require_once("../config/config.php");
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h1 class="modal-title fs-5" id="exampleModalLabel">Categorias</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <table class="table table-info table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Nome da categoria</th>
+                                            <th>Opção de exclusão</th>
+
+                                        </tr>
+                                    <tbody id="generatedCategories">
+                                    
+                                    </tbody>
+                                    </thead>
+                                </table>
+
+                                <div>
+                                    <form id="makingCategoryForm" class="row" method="post">
+                                        <div class="col-auto">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" id="makingCategory" name="makingCategory" placeholder="Categoria nova">
+                                                <button type="submit" class="btn btn-outline-primary">Criar categoria</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <div id="manipulateCategoryMsg"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal Marcas-->
+                <div class="modal fade" id="manipulateBrandsModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="Marcas" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Marcas</h1>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
@@ -366,21 +367,21 @@ require_once("../config/config.php");
                                 <h1 class="modal-title fs-5" id="modalTitleCreate">Cadastrando produto</h1>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
-                            <form id="createProduct" class="" method="post">
+                            <form id="createProduct" method="post">
                                 <div class="modal-body">
                                     <!--PRIMEIRA LINHA-->
                                     <div class="row gy-2 gx-3 align-items-center justify-content-center">
 
                                         <div class="col-md-3">
                                             <div class="form-floating mb-2">
-                                                <input placeholder="" type="text" maxlength="50" class="form-control" id="nameCreate" name="nameCreate">
+                                                <input autocomplete="off" placeholder="" type="text" maxlength="50" class="form-control" id="nameCreate" name="nameCreate">
                                                 <label for="nameCreate">Nome do produto</label>
                                             </div>
                                         </div>
 
                                         <div class="col-md-3">
                                             <div class="form-floating mb-2">
-                                                <input placeholder="" type="text" maxlength="25" class="form-control" id="categoryCreate" name="categoryCreate">
+                                                <input autocomplete="off" placeholder="" type="text" maxlength="25" class="form-control" id="categoryCreate" name="categoryCreate">
                                                 <label for="categoryCreate">Categoria</label>
                                             </div>
                                             <div id="categorySuggestions"></div>
@@ -405,7 +406,7 @@ require_once("../config/config.php");
 
                                         <div class="col-md-3">
                                             <div class="form-floating mb-2">
-                                                <input placeholder="" type="text" maxlength="30" class="form-control" id="insideCodeCreate" name="insideCodeCreate">
+                                                <input autocomplete="off" placeholder="" type="text" maxlength="30" class="form-control" id="insideCodeCreate" name="insideCodeCreate">
                                                 <label for="insideCodeCreate">Código interno</label>
                                             </div>
                                         </div>
@@ -417,21 +418,22 @@ require_once("../config/config.php");
 
                                         <div class="col-md-3">
                                             <div class="form-floating mb-2">
-                                                <input placeholder="" type="text" maxlength="30" class="form-control" id="originalCodeCreate" name="originalCodeCreate">
+                                                <input autocomplete="off" placeholder="" type="text" maxlength="30" class="form-control" id="originalCodeCreate" name="originalCodeCreate">
                                                 <label for="originalCodeCreate">Código original</label>
                                             </div>
                                         </div>
 
                                         <div class="col-md-3">
                                             <div class="form-floating mb-2">
-                                                <input placeholder="" type="text" maxlength="25" class="form-control" id="brandCreate" name="brandCreate">
+                                                <input autocomplete="off" placeholder="" type="text" maxlength="25" class="form-control" id="brandCreate" name="brandCreate">
                                                 <label for="brandCreate">Marca</label>
                                             </div>
+                                            <div id="brandSuggestions"></div>
                                         </div>
 
                                         <div class="col-md-3">
                                             <div class="form-floating mb-2">
-                                                <input placeholder="" type="text" maxlength="30" class="form-control" id="brandCodeCreate" name="brandCodeCreate">
+                                                <input autocomplete="off" placeholder="" type="text" maxlength="30" class="form-control" id="brandCodeCreate" name="brandCodeCreate">
                                                 <label for="brandCodeCreate">Código do fabricante</label>
                                             </div>
                                         </div>
@@ -470,14 +472,14 @@ require_once("../config/config.php");
 
                                         <div id="atLocalOption2" class="col-md-3" style="display:none">
                                             <div class="form-floating mb-2">
-                                                <input placeholder="" type="number" class="form-control" id="quantityCreate" name="quantityCreate">
+                                                <input autocomplete="off" placeholder="" type="number" class="form-control" id="quantityCreate" name="quantityCreate">
                                                 <label for="quantityCreate"><small>Estoque</small></label>
                                             </div>
                                         </div>
 
                                         <div id="atLocalOption3" class="col-md-3" style="display:none">
                                             <div class="form-floating mb-2">
-                                                <input placeholder="" type="number" class="form-control" id="quantityMinCreate" name="quantityMinCreate">
+                                                <input autocomplete="off" placeholder="" type="number" class="form-control" id="quantityMinCreate" name="quantityMinCreate">
                                                 <label for="quantityMinCreate"><small>Estoque baixo</small></label>
                                             </div>
                                         </div>
@@ -489,14 +491,14 @@ require_once("../config/config.php");
 
                                         <div class="col-md-2">
                                             <div class="form-floating mb-2">
-                                                <input placeholder="" type="number" step="0.01" class="form-control" id="costCreate" name="costCreate">
+                                                <input autocomplete="off" placeholder="" type="number" step="0.01" class="form-control" id="costCreate" name="costCreate">
                                                 <label for="costCreate">Custo (R$)</label>
                                             </div>
                                         </div>
 
                                         <div class="col-md-2">
                                             <div class="form-floating mb-2">
-                                                <input placeholder="" type="number" step="0.01" class="form-control" id="priceCreate" name="priceCreate">
+                                                <input autocomplete="off" placeholder="" type="number" step="0.01" class="form-control" id="priceCreate" name="priceCreate">
                                                 <label for="priceCreate">Preço (R$)</label>
                                             </div>
                                         </div>
@@ -514,14 +516,14 @@ require_once("../config/config.php");
 
                                         <div id="promotionalOptionCreate1" class="col-md-3" style="display: none;">
                                             <div class="form-floating mb-2">
-                                                <input placeholder="" type="date" class="form-control" id="promotionalDateCreate" name="promotionalDateCreate">
+                                                <input autocomplete="off" placeholder="" type="date" class="form-control" id="promotionalDateCreate" name="promotionalDateCreate">
                                                 <label for="promotionalDateCreate">Promoção válida até...</label>
                                             </div>
                                         </div>
 
                                         <div id="promotionalOptionCreate2" class="col-md-3" style="display: none;">
                                             <div class="form-floating mb-2">
-                                                <input placeholder="" type="number" step="0.01" class="form-control" id="promotionalPriceCreate" name="promotionalPriceCreate">
+                                                <input autocomplete="off" placeholder="" type="number" step="0.01" class="form-control" id="promotionalPriceCreate" name="promotionalPriceCreate">
                                                 <label for="promotionalPriceCreate">Promoção (R$)</label>
                                             </div>
                                         </div>
@@ -541,7 +543,7 @@ require_once("../config/config.php");
                                         </div>
 
                                         <div id="visibleOptionCreate1" class="col-md-5 mb-2" style="display: none;">
-                                            <div class="form-floating">
+                                            <div autocomplete="off" class="form-floating">
                                                 <textarea rows="1" maxlength="150" class="form-control" placeholder="" id="aplicationCreate" name="aplicationCreate"></textarea>
                                                 <label for="aplicationCreate">Aplicação do produto</label>
                                             </div>
@@ -606,10 +608,10 @@ require_once("../config/config.php");
                             <div class="modal-header">
                                 <h1 class="modal-title fs-5" id="modalTitleCreate">Editando produto</h1>
                                 <small><span id="editFirstRecord" class="mx-2 text-info"></span>
-                                <span id="editLastRecord" class="mx-2 text-warning"></span></small>
+                                    <span id="editLastRecord" class="mx-2 text-warning"></span></small>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
-                            <form id="editProduct" method="post">
+                            <form id="editProduct" method="post" autocomplete="off">
                                 <div class="modal-body">
                                     <!--PRIMEIRA LINHA-->
                                     <div class="row gy-2 gx-3 align-items-center justify-content-center">
@@ -626,13 +628,13 @@ require_once("../config/config.php");
                                                 <input placeholder="" type="text" maxlength="25" class="form-control" id="categoryEdit" name="categoryEdit">
                                                 <label for="categoryEdit">Categoria</label>
                                             </div>
-                                            <div id="categorySuggestions"></div>
+                                            <div id="categorySuggestionsUpd"></div>
                                         </div>
 
                                         <div class="col-md-3">
                                             <div class="form-floating mb-2">
                                                 <select class="form-select" id="automakerEdit" name="automakerEdit" aria-label="Opções de montadoras">
-                                                    
+
                                                 </select>
                                                 <label for="automakerEdit">Montadora</label>
                                             </div>
@@ -662,6 +664,7 @@ require_once("../config/config.php");
                                                 <input placeholder="" type="text" maxlength="25" class="form-control" id="brandEdit" name="brandEdit">
                                                 <label for="brandEdit">Marca</label>
                                             </div>
+                                            <div id="brandSuggestionsUpd"></div>
                                         </div>
 
                                         <div class="col-md-3">
@@ -689,7 +692,7 @@ require_once("../config/config.php");
                                         <div class="col-md-3">
                                             <div class="form-floating mb-2">
                                                 <select class="form-select" id="inventoryEdit" name="inventoryEdit" aria-label="Tipo de estoque do produto">
-                                                    
+
                                                 </select>
                                                 <label for="inventoryEdit">Tipo de estoque</label>
                                             </div>
@@ -798,7 +801,7 @@ require_once("../config/config.php");
                                                 <label><small><strong>Imagem principal</strong></small></label>
                                                 <input type="file" class="form-control-file" id="imgEdit" name="imgEdit" placeholder="Imagem">
                                                 <img src="" class="rounded" width="140" height="140" id="targetImgEdit" alt="Imagem principal do produto">
-                                                <button class="btn btn-sm btn-outline-danger" type="button" onclick="clearImage2('imgEdit', 'targetImgEdit')">X</button>
+                                                <button class="btn btn-sm btn-outline-danger" type="button" onclick="clearImage2('imgEdit', 'targetImgEdit', 'imgDelLog')">X</button>
                                             </div>
                                         </div>
 
@@ -807,13 +810,13 @@ require_once("../config/config.php");
                                                 <label><small><strong>1ª imagem adicional</strong></small></label>
                                                 <input type="file" value="" class="form-control-file" id="imgEdit1" name="imgEdit1" placeholder="Imagem">
                                                 <img src="../assets/img/products/default-image.png" class="rounded" width="75" height="75" id="targetImgEdit1" alt="1ª imagem adicional do produto">
-                                                <button class="btn btn-sm btn-outline-danger" type="button" onclick="clearImage2('imgEdit1', 'targetImgEdit1')">X</button>
+                                                <button class="btn btn-sm btn-outline-danger" type="button" onclick="clearImage2('imgEdit1', 'targetImgEdit1', 'imgDelLog1')">X</button>
                                             </div>
                                             <div class="form-group text-center mb-2" style="display: none;">
                                                 <label><small><strong>2ª imagem adicional</strong></small></label>
                                                 <input type="file" value="" class="form-control-file" id="imgEdit2" name="imgEdit2" placeholder="Imagem">
                                                 <img src="../assets/img/products/default-image.png" class="rounded" width="75" height="75" id="targetImgEdit2" alt="2ª imagem adicional do produto">
-                                                <button class="btn btn-sm btn-outline-danger" type="button" onclick="clearImage2('imgEdit2', 'targetImgEdit2')">X</button>
+                                                <button class="btn btn-sm btn-outline-danger" type="button" onclick="clearImage2('imgEdit2', 'targetImgEdit2', 'imgDelLog2')">X</button>
                                             </div>
                                         </div>
 
@@ -826,9 +829,16 @@ require_once("../config/config.php");
                                         </div>
                                         <div id="messageEditProduct" class="fw-bold text-center"></div>
                                     </div>
+                                    <!--INPUTS HIDDEN PARA AJUDAR NAS VERIFICAÇÕES NA HORA DE EDITAR OS DADOS DO PRODUTO - Início-->
+                                    <input id="oldOriginalCode" name="oldOriginalCode" type="hidden">
+                                    <input id="oldBrandCode" name="oldBrandCode" type="hidden">
+                                    <input id="imgDelLog" name="imgDelLog" type="hidden">
+                                    <input id="imgDelLog1" name="imgDelLog1" type="hidden">
+                                    <input id="imgDelLog2" name="imgDelLog2" type="hidden">
                                     <input id="imgEditTxt" name="imgEditTxt" type="hidden">
                                     <input id="imgEditTxt1" name="imgEditTxt1" type="hidden">
                                     <input id="imgEditTxt2" name="imgEditTxt2" type="hidden">
+                                    <!--INPUTS HIDDEN PARA AJUDAR NAS VERIFICAÇÕES NA HORA DE EDITAR OS DADOS DO PRODUTO - Fim-->
                                     <input id="idEdit" name="idEdit" type="hidden">
                                     <button id="EditProductBtn" type="submit" class="btn btn-primary">Salvar</button>
                                 </div>
@@ -846,10 +856,30 @@ require_once("../config/config.php");
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                ...
+                                <h5 class="text-danger text-center"><small>Tenha certeza que deseja realmente excluir do banco de dados o produto logo abaixo. É um método irreversível...</small></h5>
+                                <div class="card mx-auto" style="width: 12rem;">
+                                    <img id="delProdImg" src="" class="card-img-top" alt="Imagem do produto">
+                                    <div class="card-body text-center">
+                                        <h6 class="card-title" id="delProdName"></h6>
+                                        <p class="card-text" id="delProdInsideCode"></p>
+                                        <p class="card-text" id="delProdAutomaker"></p>
+                                        <p class="card-text" id="delProdOriCode"></p>
+                                        <p class="card-text" id="DelProdBrand"></p>
+                                        <p class="card-text" id="DelProdBrandCode"></p>
+                                    </div>
+                                </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-primary">Excluir</button>
+                                <div class="row">
+                                    <div id="loadingDeleteProduct" style="display: none;" class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Processando...</span>
+                                    </div>
+                                    <div id="messageDeleteProduct" class="fw-bold text-center"></div>
+                                </div>
+                                <form id="deleteProduct" method="post">
+                                    <input id="idDelete" name="idDelete" type="hidden">
+                                    <button id="DeleteProductBtn" type="submit" class="btn btn-danger">Excluir</button>
+                                </form>
                             </div>
                         </div>
                     </div>

@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['idEdit']) {
     checkEmptyOrNull($category, 'Categoria');
     $category = ucwords($category);
     checkEmptyOrNull($automaker, 'Montadora');
-    
+
     if (empty($original_code) && empty($brand_code)) {
         echo "Deve ter ao menos um código de referência, seja inserido no campo 'Código original' e/ou no campo 'Código do fabricante'.";
         exit;
@@ -67,30 +67,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['idEdit']) {
         $original_code = mb_strtoupper($original_code, 'UTF-8');
     }
 
+
     if (!empty($original_code) && empty($brand_code)) {
         // Verificar duplicatas por código original
-        $stmt = $pdo->prepare("SELECT * FROM products WHERE original_code = :original_code AND brand_code = 'INDEFINIDO'");
-        $stmt->bindParam(':original_code', $original_code);
-        $stmt->execute();
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $old_original_code = $_POST['oldOriginalCode'];
+        if ($original_code != $old_original_code) {
+            $stmt = $pdo->prepare("SELECT * FROM products WHERE original_code = :original_code AND brand_code = 'INDEFINIDO'");
+            $stmt->bindParam(':original_code', $original_code);
+            $stmt->execute();
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        if (count($results) > 0) {
-            echo 'Já existe produto com o código original "' . $original_code . '" cadastrado no sistema.';
-            exit;
+            if (count($results) > 0) {
+                echo 'Já existe produto com o código original "' . $original_code . '" cadastrado no sistema.';
+                exit;
+            }
         }
     }
 
+
     if (!empty($brand_code)) {
         // Verificar duplicatas por código de fabricante
-        $brand_code = mb_strtoupper($brand_code, 'UTF-8');
-        $stmt = $pdo->prepare("SELECT * FROM products WHERE brand_code = :brand_code");
-        $stmt->bindParam(':brand_code', $brand_code);
-        $stmt->execute();
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $old_brand_code = $_POST['oldBrandCode'];
+        if ($brand_code != $old_brand_code) {
+            $brand_code = mb_strtoupper($brand_code, 'UTF-8');
+            $stmt = $pdo->prepare("SELECT * FROM products WHERE brand_code = :brand_code");
+            $stmt->bindParam(':brand_code', $brand_code);
+            $stmt->execute();
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        if (count($results) > 0) {
-            echo 'Já existe produto com o código de fabricante "' . $brand_code . '" cadastrado no sistema.';
-            exit;
+            if (count($results) > 0) {
+                echo 'Já existe produto com o código de fabricante "' . $brand_code . '" cadastrado no sistema.';
+                exit;
+            }
         }
     } else {
         $brand_code = 'INDEFINIDO';
@@ -171,57 +179,89 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['idEdit']) {
     $main_path_img = "../../../assets/img/products/";
     $aditional_path_img = "../../../assets/img/products/extra/";
 
-    if (empty($_FILES['imgEdit']['name'])) {
-        $img0 = "default-image.png";
-    } else {
+    if (!empty($_POST['imgDelLog']) || !empty($_POST['imgDelLog1']) || !empty($_POST['imgDelLog2'])) {
+        $oldImg = $_POST['imgEditTxt'];
+        $oldImg1 = $_POST['imgEditTxt1'];
+        $oldImg2 = $_POST['imgEditTxt2'];
+
+        $updatingImages = "UPDATE products SET ";
+        if (!empty($_POST['imgDelLog'])) {
+
+            $updatingImages .= "img0 = null, img1 = null, img2 = null ";
+            if (!empty($oldImg)) {
+                eraseImage($oldImg, $main_path_img);
+            }
+            if (!empty($oldImg1)) {
+                eraseImage($oldImg1, $aditional_path_img);
+            }
+            if (!empty($oldImg2)) {
+                eraseImage($oldImg2, $aditional_path_img);
+            }
+        } elseif (!empty($_POST['imgDelLog1'])) {
+            $updatingImages .= "img1 = null, img2 = null ";
+            if (!empty($oldImg1)) {
+                eraseImage($oldImg1, $aditional_path_img);
+            }
+            if (!empty($oldImg2)) {
+                eraseImage($oldImg2, $aditional_path_img);
+            }
+        } else {
+            $updatingImages .= "img2 = null ";
+            if (!empty($oldImg2)) {
+                eraseImage($oldImg2, $aditional_path_img);
+            }
+        }
+        $updatingImages .= "WHERE id = :id";
+
+        try {
+            $pdo->beginTransaction();
+            $resImgUpd = $pdo->prepare($updatingImages);
+            $resImgUpd->bindValue(":id", $id);
+            $resImgUpd->execute();
+            $pdo->commit();
+        } catch (Exception $e) {
+            $pdo->rollBack();
+            echo "Erro na transação: " . $e->getMessage();
+        }
+    }
+
+    if (!empty($_FILES['imgEdit']['name'])) {
         $img0 = uploadImage('imgEdit', $main_path_img, $name_url, $original_code_url, $brand_code_url, 'imagemPrincipal');
+    } else {
+        $img0 = "default-image.png";
     }
 
-    if (empty($_FILES['imgEdit1']['name'])) {
-        $img1 = "default-image.png";
-    } else {
+    if (!empty($_FILES['imgEdit1']['name'])) {
         $img1 = uploadImage('imgEdit1', $aditional_path_img, $name_url, $original_code_url, $brand_code_url, 'imagemExtra1');
-    }
-
-    if (empty($_FILES['imgEdit2']['name'])) {
-        $img2 = "default-image.png";
     } else {
-        $img2 = uploadImage('imgEdit2', $aditional_path_img, $name_url, $original_code_url, $brand_code_url, 'imagemExtra2');
+        $img1 = "default-image.png";
     }
 
+    if (!empty($_FILES['imgEdit2']['name'])) {
+        $img2 = uploadImage('imgEdit2', $aditional_path_img, $name_url, $original_code_url, $brand_code_url, 'imagemExtra2');
+    } else {
+        $img2 = "default-image.png";
+    }
 
     $pdo->beginTransaction();
 
     try {
-        $sql = "INSERT INTO products (name, category, automaker, original_code, brand, brand_code, aplication, state, inventory, localization, quantity, quantity_min, cost, price, promotional, promotional_date, promotional_price, visible, name_url, description, keywords";
+
+        $sql = "UPDATE products SET name = :name, category = :category, automaker = :automaker, original_code = :original_code, brand = :brand, brand_code = :brand_code, aplication = :aplication, state = :state, inventory = :inventory, localization = :localization, quantity = :quantity, quantity_min = :quantity_min, cost = :cost, price = :price, promotional = :promotional, promotional_date = :promotional_date, promotional_price = :promotional_price, visible = :visible, name_url = :name_url, description = :description, keywords = :keywords";
 
         if ($img0 != "default-image.png") {
-            $sql .= ", img0";
+            $sql .= ", img0 = :img0";
         }
 
         if ($img1 != 'default-image.png') {
-            $sql .= ", img1";
+            $sql .= ", img1 = :img1";
         }
 
         if ($img2 != 'default-image.png') {
-            $sql .= ", img2";
+            $sql .= ", img2 = :img2";
         }
 
-        $sql .= ", first_record, last_record) VALUES (:name, :category, :automaker, :original_code, :brand, :brand_code, :aplication, :state, :inventory, :localization, :quantity, :quantity_min, :cost, :price, :promotional, :promotional_date, :promotional_price, :visible, :name_url, :description, :keywords";
-
-        if ($img0 != "default-image.png") {
-            $sql .= ", :img0";
-        }
-
-        if ($img1 != 'default-image.png') {
-            $sql .= ", :img1";
-        }
-
-        if ($img2 != 'default-image.png') {
-            $sql .= ", :img2";
-        }
-
-        $sql .= ", NOW(), NOW())";
+        $sql .= ", last_record = NOW() WHERE id = :id";
 
         $res = $pdo->prepare($sql);
         $res->bindValue(":name", $name);
@@ -258,6 +298,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['idEdit']) {
             $res->bindValue(":img2", $img2);
         }
 
+        $res->bindValue(":id", $id);
+
         if ($res->execute()) {
             //VERIFFICAÇÃO SE TAL CATEGORIA EXISTE. CASO NÃO, ADICIONE-A NO BANCO DE DADOS
             $stmt = $pdo->prepare("SELECT * FROM categories WHERE name = :name");
@@ -271,6 +313,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['idEdit']) {
                 $resCategory->bindValue(":name", $category);
                 $resCategory->execute();
             }
+
+            //VERIFFICAÇÃO SE TAL MARCA EXISTE. CASO NÃO, ADICIONE-A NO BANCO DE DADOS
+            $stmt = $pdo->prepare("SELECT * FROM brands WHERE name = :name");
+            $stmt->bindParam(':name', $brand);
+            $stmt->execute();
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            if (count($results) == 0) {
+                $sqlBrand = "INSERT INTO brands (name) VALUE (:name)";
+                $resBrand = $pdo->prepare($sqlBrand);
+                $resBrand->bindValue(":name", $brand);
+                $resBrand->execute();
+            }
+
             $pdo->commit();
             echo 'Success!';
         } else {

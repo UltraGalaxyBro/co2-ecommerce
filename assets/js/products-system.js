@@ -138,11 +138,24 @@ function clearImage(inputId, imgId) {
     const input = $('#' + inputId);
     const img = $('#' + imgId);
 
+    // Verifica se a imagem sendo apagada é a primeira
+    if (inputId === 'imgCreate') {
+        // Se sim, limpa as imagens dos campos seguintes
+        $('#imgCreate1, #imgCreate2').each(function () {
+            const id = $(this).attr('id');
+            const targetId = 'target' + id.charAt(0).toUpperCase() + id.slice(1);
+            $(this).val('');
+            $('#' + targetId).attr('src', '../assets/img/products/default-image.png');
+        });
+    }
+
+    // Limpa a imagem atual
     input.val('');
     img.attr('src', '../assets/img/products/default-image.png');
 
     showHideImageDivs();
 }
+
 
 function showHideImageDivs() {
     // Mostra ou esconde as divs adicionais com base na presença de imagens nos campos correspondentes
@@ -182,15 +195,30 @@ $(document).ready(function () {
 
 //--------------------------------SCRIPTS RESPONSÁVEIS PELA EXIBIÇÃO DAS IMAGENS NO FORMULÁRIO PARA EDITAR UM PRODUTO - INÍCIO
 
-function clearImage2(inputId, imgId) {
+function clearImage2(inputId, imgId, deleteLogId) {
     const input = $('#' + inputId);
     const img = $('#' + imgId);
+    const deleteLog = $('#' + deleteLogId);
 
+    // Verifica se a imagem sendo apagada é a primeira
+    if (inputId === 'imgEdit') {
+        // Se sim, limpa as imagens dos campos seguintes
+        $('#imgEdit1, #imgEdit2').each(function () {
+            const id = $(this).attr('id');
+            const targetId = 'target' + id.charAt(0).toUpperCase() + id.slice(1);
+            $(this).val('');
+            $('#' + targetId).attr('src', '../assets/img/products/default-image.png');
+        });
+    }
+
+    // Limpa a imagem atual
+    deleteLog.val(1);
     input.val('');
     img.attr('src', '../assets/img/products/default-image.png');
 
     showHideImageDivs2();
 }
+
 
 function showHideImageDivs2() {
     // Mostra ou esconde as divs adicionais com base na presença de imagens nos campos correspondentes
@@ -224,16 +252,13 @@ $(document).ready(function () {
         const inputId = $(this).attr('id');
         const imgId = 'target' + inputId.charAt(0).toUpperCase() + inputId.slice(1);
 
-        console.log('Input ID:', inputId);
-        console.log('Image ID:', imgId);
-
         previewImage2(inputId, imgId);
     });
 });
 
 //--------------------------------SCRIPTS RESPONSÁVEIS PELA EXIBIÇÃO DAS IMAGENS NO FORMULÁRIO PARA EDITAR UM PRODUTO - FIM
 
-//--------------------------------SCRIPTS DO AUTOCOMPLETE DE CATEGORIAS - INÍCIO
+//--------------------------------SCRIPTS DO AUTOCOMPLETE DE CATEGORIAS E MARCAS - INÍCIO
 
 $(document).ready(function () {
 
@@ -242,22 +267,22 @@ $(document).ready(function () {
         var inputText = $(this).val();
 
         $.ajax({
-            url: 'http://localhost/co2-ecommerce/system/controllers/products/apirest/apiProducts.php?api_key=AI7x234567890qwertYuiopASDFGHJKLZXCVBNM&route=categories', // Substitua 'sua_api.php' pelo caminho real da sua API
-            type: 'post',
+            url: 'http://localhost/co2-ecommerce/system/controllers/products/apirest/apiProducts.php?api_key=AI7x234567890qwertYuiopASDFGHJKLZXCVBNM&route=categories',
+            type: 'get',
             dataType: 'json',
             success: function (response) {
 
                 var filteredCategories = response.data.filter(function (category) {
-                    return category.category.toLowerCase().includes(inputText.toLowerCase());
+                    return category.name.toLowerCase().includes(inputText.toLowerCase());
                 });
 
                 $('#categorySuggestions').html('');
 
                 filteredCategories.forEach(function (category) {
-                    var suggestionItem = $('<li>' + category.category + ' &#128070;</li>');
+                    var suggestionItem = $('<li>' + category.name + ' &#128070;</li>');
 
                     suggestionItem.click(function () {
-                        $('#categoryCreate').val(category.category);
+                        $('#categoryCreate').val(category.name);
                         $('#categorySuggestions').html('');
                     });
 
@@ -269,12 +294,190 @@ $(document).ready(function () {
             }
         });
     });
+
+    $('#categoryEdit').keyup(function () {
+
+        var inputText = $(this).val();
+
+        $.ajax({
+            url: 'http://localhost/co2-ecommerce/system/controllers/products/apirest/apiProducts.php?api_key=AI7x234567890qwertYuiopASDFGHJKLZXCVBNM&route=categories',
+            type: 'get',
+            dataType: 'json',
+            success: function (response) {
+
+                var filteredCategories = response.data.filter(function (category) {
+                    return category.name.toLowerCase().includes(inputText.toLowerCase());
+                });
+
+                $('#categorySuggestionsUpd').html('');
+
+                filteredCategories.forEach(function (category) {
+                    var suggestionItem = $('<li>' + category.name + ' &#128070;</li>');
+
+                    suggestionItem.click(function () {
+                        $('#categoryEdit').val(category.name);
+                        $('#categorySuggestionsUpd').html('');
+                    });
+
+                    $('#categorySuggestionsUpd').append(suggestionItem);
+                });
+            },
+            error: function () {
+                console.log('Erro ao obter categorias do backend.');
+            }
+        });
+    });
+
+
+    $('#brandCreate').keyup(function () {
+
+        var inputText = $(this).val();
+
+        $.ajax({
+            url: 'http://localhost/co2-ecommerce/system/controllers/products/apirest/apiProducts.php?api_key=AI7x234567890qwertYuiopASDFGHJKLZXCVBNM&route=brands',
+            type: 'get',
+            dataType: 'json',
+            success: function (response) {
+
+                var filteredBrands = response.data.filter(function (brand) {
+                    return brand.name.toLowerCase().includes(inputText.toLowerCase());
+                });
+
+                $('#brandSuggestions').html('');
+
+                filteredBrands.forEach(function (brand) {
+                    var suggestionItem = $('<li>' + brand.name + ' &#128070;</li>');
+
+                    suggestionItem.click(function () {
+                        $('#brandCreate').val(brand.name);
+                        $('#brandSuggestions').html('');
+                    });
+
+                    $('#brandSuggestions').append(suggestionItem);
+                });
+            },
+            error: function () {
+                console.log('Erro ao obter marcas do backend.');
+            }
+        });
+    });
+
+    $('#brandEdit').keyup(function () {
+
+        var inputText = $(this).val();
+
+        $.ajax({
+            url: 'http://localhost/co2-ecommerce/system/controllers/products/apirest/apiProducts.php?api_key=AI7x234567890qwertYuiopASDFGHJKLZXCVBNM&route=brands',
+            type: 'get',
+            dataType: 'json',
+            success: function (response) {
+
+                var filteredBrands = response.data.filter(function (brand) {
+                    return brand.name.toLowerCase().includes(inputText.toLowerCase());
+                });
+
+                $('#brandSuggestionsUpd').html('');
+
+                filteredBrands.forEach(function (brand) {
+                    var suggestionItem = $('<li>' + brand.name + ' &#128070;</li>');
+
+                    suggestionItem.click(function () {
+                        $('#brandEdit').val(brand.name);
+                        $('#brandSuggestionsUpd').html('');
+                    });
+
+                    $('#brandSuggestionsUpd').append(suggestionItem);
+                });
+            },
+            error: function () {
+                console.log('Erro ao obter marcas do backend.');
+            }
+        });
+    });
 });
 
 //--------------------------------SCRIPTS DO AUTOCOMPLETE DE CATEGORIAS - FIM
 
-//--------------------------------SCRIPTS RESPONSÁVEIS PELO ENVIO DOS FORMULÁRIOS - INÍCIO
-//CRIAR CONTA
+$(document).on('click', '#manipulateCategories', function () {
+
+    var apiUrl = 'http://localhost/co2-ecommerce/system/controllers/products/apirest/apiProducts.php?api_key=AI7x234567890qwertYuiopASDFGHJKLZXCVBNM&route=categories';
+
+    $.ajax({
+        url: apiUrl,
+        method: 'GET',
+        dataType: 'json',
+        success: function (response) {
+            if (response && response.data && response.data.length > 0) {
+                var data = response.data;
+                $('#generatedCategories').empty();
+
+                for (var i = 0; i < data.length; i++) {
+                    var row = '<tr>';
+                    row += '<td class="fw-bold">' + data[i].name + '</td>';
+                    row += '<td><button class="deleteCategory btn btn-outline-danger" data-id="' + data[i].id + '">X</button></td>';
+                    row += '</tr>';
+                    $('#generatedCategories').append(row);
+                }
+            } else {
+                console.error('A resposta da API não contém dados válidos.');
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('Erro ao obter dados da API. Status: ' + status + ', Erro: ' + error);
+        }
+    });
+});
+
+
+$(document).on('click', '.deleteCategory', function () {
+    var categoryId = $(this).data('id');
+    
+    $.ajax({
+        url: 'controllers/products/deletingCategory.php',
+        method: 'POST',
+        data: { id: categoryId },
+        contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+        success: function (response) {
+            if (response == 'Success!') {
+                window.location = 'products.php';
+            } else {
+                $('#manipulateCategoryMsg').text(response).removeClass("text-success").addClass("text-danger");
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('Erro ao excluir categoria. Status: ' + status + ', Erro: ' + error);
+        }
+    });
+});
+
+//CRIAR CATEGORIA
+$(document).ready(function () {
+    $("#makingCategoryForm").submit(function (event) {
+        event.preventDefault();
+        var formData = new FormData(this);
+        
+        $.ajax({
+            type: "POST",
+            url: "controllers/products/creatingCategory.php",
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+        })
+            .done(function (response) {
+                if (response == 'Success!') {
+                    window.location = 'products.php';
+                } else {
+                    $('#manipulateCategoryMsg').text(response).removeClass("text-success").addClass("text-danger");
+                }
+            })
+            .fail(function (xhr, status, error) {
+                alert("Erro ao enviar o formulário para criar produto: " + error);
+            });
+    });
+});
+//--------------------------------SCRIPTS RESPONSÁVEIS PELO ENVIO DOS FORMULÁRIOS DE PRODUTOS - INÍCIO
+//CRIAR PRODUTO
 $(document).ready(function () {
     $("#createProduct").submit(function (event) {
         event.preventDefault();
@@ -294,7 +497,7 @@ $(document).ready(function () {
                 $('#createProductBtn').prop('disabled', false);
                 $('#loadingCreateProduct').hide();
                 if (response == 'Success!') {
-                    $('#messageCreateProduct').text(response).removeClass("text-danger").addClass("text-success");
+                    window.location = 'products.php';
                 } else {
                     $('#messageCreateProduct').text(response).removeClass("text-success").addClass("text-danger");
                 }
@@ -305,6 +508,67 @@ $(document).ready(function () {
     });
 });
 
+//EDITAR PRODUTO
+$(document).ready(function () {
+    $("#editProduct").submit(function (event) {
+        event.preventDefault();
+        var formData = new FormData(this);
+        $('#EditProductBtn').prop('disabled', true);
+        $('#loadingEditProduct').show();
+
+        $.ajax({
+            type: "POST",
+            url: "controllers/products/updatingProduct.php",
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+        })
+            .done(function (response) {
+                $('#EditProductBtn').prop('disabled', false);
+                $('#loadingEditProduct').hide();
+                if (response == 'Success!') {
+                    window.location = 'products.php';
+                } else {
+                    $('#messageEditProduct').text(response).removeClass("text-success").addClass("text-danger");
+                }
+            })
+            .fail(function (xhr, status, error) {
+                alert("Erro ao enviar o formulário para editar produto: " + error);
+            });
+    });
+});
+
+//EXCLUIR PRODUTO
+$(document).ready(function () {
+    $("#deleteProduct").submit(function (event) {
+        event.preventDefault();
+        var formData = new FormData(this);
+        $('#DeleteProductBtn').prop('disabled', true);
+        $('#loadingDeleteProduct').show();
+
+        $.ajax({
+            type: "POST",
+            url: "controllers/products/deletingProduct.php",
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+        })
+            .done(function (response) {
+                $('#DeleteProductBtn').prop('disabled', false);
+                $('#loadingDeleteProduct').hide();
+                if (response == 'Success!') {
+                    window.location = 'products.php';
+                } else {
+                    $('#messageDeleteProduct').text(response).removeClass("text-success").addClass("text-danger");
+                }
+            })
+            .fail(function (xhr, status, error) {
+                alert("Erro ao enviar o formulário para editar produto: " + error);
+            });
+    });
+});
 
 //--------------------------------SCRIPTS RESPONSÁVEIS PELOS FORMULÁRIOS - FIM
 
